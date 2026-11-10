@@ -1,0 +1,177 @@
+<page-meta page-style="{{galaxyShow ? 'overflow: hidden;' : ''}}"></page-meta>
+
+<view class="page {{isDay ? 'day' : 'night'}}" style="padding-top: {{navTop + 44}}px" bindtap="onPageTap">
+
+  <view class="tap-fx">
+    <view class="tap-ring {{item.day ? 'day' : ''}}"
+          wx:for="{{tapFx}}" wx:key="id"
+          style="left:{{item.x}}px;top:{{item.y}}px;width:{{item.size}}px;height:{{item.size}}px"></view>
+  </view>
+
+  <view class="head-fixed">
+    <view class="top">
+      <view class="title">星图</view>
+      <view class="settings-btn" catchtap="openSettings">作息标准</view>
+    </view>
+
+    <view class="month-row">
+      <view class="month-arrow" catchtap="prevMonth">‹</view>
+      <view class="month-label">{{monthLabel}}</view>
+      <view class="month-arrow {{canNext ? '' : 'dim'}}" catchtap="nextMonth">›</view>
+    </view>
+  </view>
+
+  <scroll-view class="body-scroll" scroll-y enhanced="{{true}}" show-scrollbar="{{false}}">
+    <view class="body-pad" bindtap="closeBubble">
+
+      <view class="stats">
+        <view class="stat">
+          <view class="stat-v">{{stats.avgBed}}</view>
+          <view class="stat-k">平均入睡</view>
+        </view>
+        <view class="stat">
+          <view class="stat-v">{{stats.avgWake}}</view>
+          <view class="stat-k">平均苏醒</view>
+        </view>
+        <view class="stat">
+          <view class="stat-v small-v">{{stats.avgDur}}</view>
+          <view class="stat-k">平均睡眠</view>
+        </view>
+        <view class="stat">
+          <view class="stat-v">{{stats.earlyCount}}</view>
+          <view class="stat-k">本月早睡</view>
+        </view>
+      </view>
+
+      <view class="star-card {{isDay ? 'card-day' : ''}}" catchtap="noop">
+        <view class="card-sheen" wx:if="{{isDay}}"></view>
+        <view class="card-head">
+          <text class="card-title">星图</text>
+          <text class="galaxy-btn" catchtap="openGalaxy">✦ 星河</text>
+        </view>
+
+        <view class="week-head">
+          <text class="week-cell" wx:for="{{weekNames}}" wx:key="*this">{{item}}</text>
+        </view>
+
+        <view class="field" style="{{fieldStyle}}">
+          <view
+            class="slot"
+            wx:for="{{cells}}"
+            wx:key="day"
+            style="left: {{item.left}}; top: {{item.top}}"
+            data-i="{{index}}"
+            catchtap="tapStar"
+            bindlongpress="longStar"
+          >
+            <view class="star-wrap">
+              <text
+                wx:if="{{item.hasRecord}}"
+                class="star-glyph"
+                style="font-size: {{item.size}}rpx; color: {{item.color}}; text-shadow: 0 0 16rpx {{item.glow}}, 0 0 6rpx {{item.glow}};"
+              >✦</text>
+              <view wx:else class="star-missing"></view>
+
+              <view
+                wx:if="{{item.isToday}}"
+                class="today-ring"
+                style="width: {{item.ring}}rpx; height: {{item.ring}}rpx;"
+              ></view>
+            </view>
+
+            <text class="slot-day">{{item.day}}</text>
+          </view>
+
+          <view
+            wx:if="{{bubble.show}}"
+            class="bubble"
+            style="left: {{bubble.left}}; top: {{bubble.top}}; transform: {{bubble.transform}};"
+          >
+            <view class="bubble-row">{{bubble.bed}} 入睡</view>
+            <view class="bubble-row">{{bubble.wake}} 醒来</view>
+            <view class="bubble-dur">睡了 {{bubble.dur}}</view>
+          </view>
+        </view>
+
+        <view class="legend">
+          <text class="legend-t">早</text>
+          <view class="legend-bar"></view>
+          <text class="legend-t">晚</text>
+        </view>
+
+        
+      </view>
+
+      <view class="hint" wx:if="{{editHint}}">长按格子，可以补录或修改那一晚</view>
+
+      <view class="insight">{{insight}}</view>
+
+      <view class="report-entry" catchtap="goReport">
+        <view>
+          <view class="entry-t">写给这周的你</view>
+          <view class="entry-s">一封信，关于你这七天的夜晚</view>
+        </view>
+        <view class="arrow">›</view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+
+<!-- 作息标准 -->
+<view class="mask" wx:if="{{showSettings}}" catchtap="closeSettings"></view>
+<view class="panel" wx:if="{{showSettings}}">
+  <view class="panel-title">作息标准</view>
+  <view class="panel-row">
+    <text class="panel-label">几点前睡算早睡</text>
+    <picker mode="time" value="{{earlySleepText}}" bindchange="onEarlySleepChange">
+      <view class="time-pill">{{earlySleepText}}</view>
+    </picker>
+  </view>
+  <view class="panel-row">
+    <text class="panel-label">几点前醒算早起</text>
+    <picker mode="time" value="{{earlyWakeText}}" bindchange="onEarlyWakeChange">
+      <view class="time-pill">{{earlyWakeText}}</view>
+    </picker>
+  </view>
+  <view class="panel-note">星图的颜色会跟着这个标准变化，望月页的晚睡提醒也用它。</view>
+</view>
+
+<!-- 编辑 / 补录 -->
+<view class="mask" wx:if="{{edit.show}}" catchtap="closeEdit"></view>
+<view class="modal" wx:if="{{edit.show}}">
+  <view class="modal-title">{{edit.isNew ? '补录这一晚' : '修改这一晚'}}</view>
+  <view class="modal-row">
+    <text>入睡</text>
+    <picker mode="time" value="{{edit.sleepText}}" data-field="sleepText" bindchange="onEditTime">
+      <view class="time-pill">{{edit.sleepText}}</view>
+    </picker>
+  </view>
+  <view class="modal-row">
+    <text>醒来</text>
+    <picker mode="time" value="{{edit.wakeText}}" data-field="wakeText" bindchange="onEditTime">
+      <view class="time-pill">{{edit.wakeText}}</view>
+    </picker>
+  </view>
+  <view class="modal-dur">睡了 {{edit.durText}}</view>
+  <view class="modal-actions">
+    <button class="m-btn ghost" catchtap="closeEdit">取消</button>
+    <button class="m-btn primary" catchtap="saveEdit">保存</button>
+  </view>
+  <view class="modal-del" wx:if="{{!edit.isNew}}" catchtap="deleteEdit">删除这一晚</view>
+</view>
+
+<!-- 星河 -->
+<view class="galaxy-mask" wx:if="{{galaxyShow}}" catchtap="closeGalaxy" catchtouchmove="noop"></view>
+<view class="galaxy" wx:if="{{galaxyShow}}" catchtouchmove="noop">
+  <view class="galaxy-head">
+    <text class="galaxy-title">{{monthLabel}} · 星河</text>
+    <text class="galaxy-close" catchtap="closeGalaxy">✕</text>
+  </view>
+
+  <view class="galaxy-stage" bindtap="onGalaxyTap">
+    <canvas type="2d" id="galaxy-canvas" class="galaxy-canvas"></canvas>
+    <view class="galaxy-tip" wx:if="{{galaxyEmpty}}">这一夜的星星还没有亮起来</view>
+  </view>
+
+  <view class="galaxy-foot">越远，是越早的夜晚。越近，是离你最近的这一夜。</view>
+</view>

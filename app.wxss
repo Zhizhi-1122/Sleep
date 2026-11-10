@@ -1,0 +1,81 @@
+page {
+  --bg-1: #080e1c;
+  --bg-2: #141f3c;
+  --card: rgba(255, 255, 255, 0.055);
+  --line: rgba(255, 255, 255, 0.10);
+  --text: #eaf0ff;
+  --muted: #8b9ab8;
+  --faint: #5f6f8f;
+  --accent: #f0c987;
+  --on-accent: #141a2c;
+
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+view, text { box-sizing: border-box; }
+
+button { margin: 0; padding: 0; line-height: 1.5; background: transparent; }
+button::after { border: none; }
+
+.card {
+  padding: 34rpx;
+  border-radius: 26rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+}
+.muted { color: var(--muted); }
+.small { font-size: 24rpx; }
+.row-between { display: flex; align-items: center; justify-content: space-between; }
+.arrow { font-size: 40rpx; color: var(--faint); font-family: Georgia, serif; }
+
+/* ---------- 点击光圈（复刻望月的 ripple） ---------- */
+.tap-fx {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.tap-ring {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 1.6px;
+  transform: translate(-50%, -50%) scale(0.02);
+  opacity: 0;
+  animation:
+    tapRingScale 667ms cubic-bezier(0.16, 0.72, 0.30, 1) forwards,
+    tapRingFade  667ms linear forwards,
+    tapRingWidth 667ms linear forwards;
+}
+
+/* 夜：暖金 */
+.tap-ring       { border-color: rgb(240, 201, 135); }
+/* 日：米白 */
+.tap-ring.day   { border-color: rgb(255, 246, 220); }
+
+/* 半径：指数逼近（前 30% 就跑完 70%） */
+@keyframes tapRingScale {
+  0%   { transform: translate(-50%, -50%) scale(0.02); }
+  30%  { transform: translate(-50%, -50%) scale(0.70); }
+  55%  { transform: translate(-50%, -50%) scale(0.90); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* 亮度：线性衰减 */
+@keyframes tapRingFade {
+  0%   { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+
+/* 线宽：由粗变细 */
+@keyframes tapRingWidth {
+  0%   { border-width: 1.6px; }
+  100% { border-width: 0.2px; }
+}

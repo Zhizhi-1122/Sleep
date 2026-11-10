@@ -1,0 +1,111 @@
+<canvas type="2d" id="sky" class="sky {{isDay ? 'sky-day' : 'sky-night'}}"></canvas>
+
+<view class="orb-hot" style="{{orbStyle}}" bindlongpress="toggleWeather"></view>
+<view class="moon-label" wx:if="{{!isDay && phaseName}}" style="{{moonLabelStyle}}">{{phaseName}}</view>
+<view class="hint" wx:if="{{showHint}}" style="{{hintStyle}}">长按我试试</view>
+
+<view
+  class="page {{isDay ? 'day' : 'night'}} {{intro ? 'intro' : 'intro-fast'}}"
+  style="padding-top: {{navTop + 44}}px"
+  bindtap="onSkyTap"
+>
+  <view class="head">
+    <view class="date">{{dateText}}</view>
+    <view class="greeting">{{greeting}}</view>
+    <view class="greet-sub">{{subtitle}}</view>
+  </view>
+
+  <view class="poem">
+  <view class="poem-body">
+    <view class="pm-open">“</view>
+    <view class="poem-text">{{quote}}</view>
+    <view class="pm-close">”</view>
+  </view>
+  <view class="poem-by" wx:if="{{quoteBy}}">—— {{quoteBy}}</view>
+  <view class="cap-row">
+    <view class="cap-line"></view>
+    <text class="cap-text">{{isDay ? '晨间一句' : '今日一句'}}</text>
+  </view>
+</view>
+
+  <view class="last" catchtap="goStats" hover-class="last-hover">
+    <view class="last-main">
+      <view class="last-label">{{lastLabel}}</view>
+      <view class="last-value">{{lastValue}}</view>
+    </view>
+    <view class="arrow">›</view>
+  </view>
+
+  <view class="actions">
+    <button class="btn primary" hover-class="btn-hover" catchtap="onSleep">我睡了</button>
+    <button class="btn ghost" hover-class="ghost-hover" catchtap="onWake">我醒了</button>
+  </view>
+
+  <view class="status" wx:if="{{statusText}}">{{statusText}}</view>
+
+  <view class="dist" wx:if="{{distText}}">{{distText}}</view>
+</view>
+
+<view
+  class="toast {{isDay ? 'day' : ''}} {{toastShow ? 'show' : ''}} {{canUndo ? 'undo' : ''}}"
+  bindtap="onUndo"
+>{{toastText}}</view>
+
+<view class="reason-mask" wx:if="{{reasonShow}}" catchtap="closeReason"></view>
+<view class="reason-sheet {{reasonShow ? 'show' : ''}}" wx:if="{{reasonShow}}">
+  <view class="reason-title">这么晚还没睡呀</view>
+  <view class="reason-sub">是什么让你留到了现在？</view>
+
+  <view class="reason-chips">
+    <view
+      class="reason-chip"
+      wx:for="{{reasonOptions}}"
+      wx:key="*this"
+      data-i="{{index}}"
+      catchtap="pickReason"
+    >{{item}}</view>
+  </view>
+
+  <input
+    class="reason-input"
+    placeholder="或者，自己写一句"
+    placeholder-class="reason-ph"
+    value="{{reasonCustom}}"
+    bindinput="onReasonInput"
+  />
+
+  <view class="reason-actions">
+    <button class="reason-btn ghost" catchtap="closeReason">先不说了</button>
+    <button class="reason-btn primary" catchtap="submitReason">好</button>
+  </view>
+</view>
+
+<!-- 睡太久了，帮你确认 -->
+<view class="anom-mask" wx:if="{{wakeAnomaly.show}}" catchtap="closeAnomaly"></view>
+<view class="anom-sheet" wx:if="{{wakeAnomaly.show}}">
+  <view class="anom-title">这一觉好像有点长</view>
+  <view class="anom-sub">
+    你在 {{wakeAnomaly.sleepText}} 睡下，现在才醒来，中间隔了 {{wakeAnomaly.rawText}}。
+    是忘记点「我醒了」吗？
+  </view>
+
+  <view class="anom-actions">
+    <view class="anom-btn" catchtap="anomalyForgot">
+      <view class="anom-btn-t">忘记点醒了</view>
+      <view class="anom-btn-s">按 8 小时补上</view>
+    </view>
+
+    <view class="anom-btn" catchtap="anomalyDiscard">
+      <view class="anom-btn-t">这条不算</view>
+      <view class="anom-btn-s">移除这一晚</view>
+    </view>
+  </view>
+
+  <view class="anom-manual">
+    <text class="anom-manual-label">我记得醒来是</text>
+    <picker mode="time" value="{{wakeAnomaly.manualText}}" bindchange="onAnomalyManual">
+      <view class="time-pill">{{wakeAnomaly.manualText}}</view>
+    </picker>
+    <view class="anom-manual-ok" catchtap="anomalyManual">确定</view>
+  </view>
+</view>

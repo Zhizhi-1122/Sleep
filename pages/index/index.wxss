@@ -1,0 +1,452 @@
+.sky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  transition: background .9s ease;
+}
+.sky-night {
+  background: linear-gradient(180deg, #080e1c 0%, #141f3c 100%);
+}
+.sky-day {
+  background: linear-gradient(180deg, #bad8ec 0%, #f7efe2 100%);
+}
+
+.orb-hot {
+  position: fixed;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  z-index: 30;
+}
+
+.moon-label {
+  position: fixed;
+  z-index: 31;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 20rpx;
+  letter-spacing: 3rpx;
+  color: rgba(240, 201, 135, 0.55);
+}
+
+.hint {
+  position: fixed;
+  z-index: 31;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: rgba(255, 255, 255, 0.32);
+  animation: hintFade 2.5s ease both;
+}
+
+@keyframes hintFade {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.page {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  padding: 0 42rpx 200rpx;
+  box-sizing: border-box;
+}
+
+/* 主题变量 */
+.page.night {
+  --text: #eaf0ff;
+  --muted: #8b9ab8;
+  --faint: #5f6f8f;
+  --card: rgba(255, 255, 255, 0.055);
+  --line: rgba(255, 255, 255, 0.10);
+  --poem: #f6e7c8;
+  --poem-shadow: 0 4rpx 30rpx rgba(240, 201, 135, 0.22);
+  --mark: rgba(240, 201, 135, 0.20);
+}
+
+.page.day {
+  --text: #22304a;
+  --muted: #5f7191;
+  --faint: #8c9bb4;
+  --card: rgba(255, 255, 255, 0.62);
+  --line: rgba(34, 48, 74, 0.10);
+  --poem: #35435a;
+  --poem-shadow: 0 4rpx 24rpx rgba(180, 200, 230, 0.35);
+  --mark: rgba(160, 180, 210, 0.45);
+}
+
+.date {
+  font-size: 24rpx;
+  color: var(--muted);
+  letter-spacing: 2rpx;
+  transition: color .9s ease;
+}
+
+.greeting {
+  margin-top: 16rpx;
+  font-size: 62rpx;
+  font-weight: 600;
+  letter-spacing: 3rpx;
+  color: var(--text);
+  transition: color .9s ease;
+}
+
+.greet-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: var(--muted);
+  letter-spacing: 1rpx;
+  transition: color .9s ease;
+}
+
+/* 诗句 */
+/* 诗句 */
+.poem {
+  position: relative;
+  margin-top: 86rpx;
+  padding-left: 4rpx;
+}
+
+.poem-text {
+  font-family: "Songti SC", "STSong", "SimSun", serif;
+  font-size: 42rpx;
+  line-height: 2;
+  letter-spacing: 3rpx;
+  color: var(--poem);
+  text-shadow: var(--poem-shadow);
+  transition: color .9s ease, text-shadow .9s ease;
+}
+
+/* 首尾引号：同一字号，对称 */
+.q {
+  font-family: Georgia, serif;
+  font-size: 0.92em;
+  line-height: 1;
+  color: rgba(240, 201, 135, 0.55);
+}
+
+.poem-by {
+  margin-top: 10rpx;
+  text-align: right;
+  font-size: 22rpx;
+  letter-spacing: 1rpx;
+  color: var(--muted);
+  transition: color .9s ease;
+}
+
+.cap-row {
+  display: flex;
+  align-items: center;
+  margin-top: 22rpx;
+}
+
+.cap-line {
+  width: 64rpx;
+  height: 1rpx;
+  margin-right: 16rpx;
+  background: linear-gradient(90deg, rgba(240, 201, 135, 0.8), rgba(240, 201, 135, 0));
+}
+
+.cap-text {
+  font-size: 22rpx;
+  letter-spacing: 6rpx;
+  color: var(--faint);
+  transition: color .9s ease;
+}
+
+/* 最近一晚 / 一早 */
+.last {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 78rpx;
+  padding: 30rpx 32rpx;
+  border-radius: 24rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  transition: background .9s ease, border-color .9s ease;
+}
+.last-hover { background: rgba(255, 255, 255, 0.10); }
+.last-label {
+  font-size: 22rpx;
+  letter-spacing: 3rpx;
+  color: var(--faint);
+  transition: color .9s ease;
+}
+.last-value {
+  margin-top: 10rpx;
+  font-size: 28rpx;
+  color: var(--text);
+  transition: color .9s ease;
+}
+.arrow {
+  font-size: 40rpx;
+  color: var(--faint);
+  font-family: Georgia, serif;
+  transition: color .9s ease;
+}
+
+/* 按钮 */
+.actions { display: flex; margin-top: 44rpx; }
+
+.btn {
+  flex: 1;
+  padding: 30rpx 0;
+  border-radius: 999rpx;
+  font-size: 30rpx;
+  text-align: center;
+  letter-spacing: 2rpx;
+  transition: background .9s ease, border-color .9s ease, color .9s ease;
+}
+.btn + .btn { margin-left: 24rpx; }
+
+.primary {
+  color: #141a2c;
+  font-weight: 600;
+  background: linear-gradient(135deg, #f7dfae, #e8b96f);
+  animation: breathe 4s ease-in-out infinite;
+}
+.btn-hover { opacity: 0.82; }
+
+.ghost {
+  color: var(--text);
+  border: 1rpx solid var(--line);
+  background: var(--card);
+}
+.ghost-hover { background: rgba(255, 255, 255, 0.12); }
+
+.status {
+  margin-top: 24rpx;
+  text-align: center;
+  font-size: 23rpx;
+  letter-spacing: 1rpx;
+  color: var(--muted);
+  transition: color .9s ease;
+}
+
+/* 位置②：距上次入睡 / 苏醒 */
+.dist {
+  margin-top: 78rpx;
+  text-align: center;
+  font-size: 22rpx;
+  letter-spacing: 3rpx;
+  color: var(--faint);
+  transition: color .9s ease;
+}
+
+/* 轻提示 */
+.toast {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 210rpx;
+  z-index: 40;
+  text-align: center;
+  pointer-events: none;
+  font-size: 26rpx;
+  letter-spacing: 3rpx;
+  color: rgba(246, 231, 200, 0.95);
+  text-shadow: 0 0 22rpx rgba(240, 201, 135, 0.55);
+  opacity: 0;
+  transform: translateY(18rpx);
+  transition: opacity .55s ease, transform .55s ease;
+  pointer-events: none;
+}
+.toast.undo {
+  pointer-events: auto;
+  text-decoration: underline;
+  text-underline-offset: 8rpx;
+}
+.toast.day {
+  color: rgba(138, 95, 34, 0.95);
+  text-shadow: 0 0 18rpx rgba(255, 220, 160, 0.6);
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* 入场：按钮先到，文字后到 */
+.intro .actions { animation: rise .55s .10s both; }
+.intro .head { animation: rise .7s .25s both; }
+.intro .poem { animation: rise .8s .40s both; }
+.intro .last { animation: rise .7s .55s both; }
+
+.intro-fast .actions { animation: rise .26s both; }
+.intro-fast .head { animation: rise .26s .04s both; }
+.intro-fast .poem { animation: rise .26s .08s both; }
+.intro-fast .last { animation: rise .26s .12s both; }
+
+@keyframes rise {
+  from { transform: translateY(18rpx); }
+  to { transform: translateY(0); }
+}
+
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 16rpx 40rpx rgba(240, 201, 135, 0.22); }
+  50% { box-shadow: 0 16rpx 58rpx rgba(240, 201, 135, 0.42); }
+}
+
+
+
+/* ── 诗句大引号（追加在最后，优先级最高） ── */
+.poem-body {
+  position: relative;
+  padding: 12rpx 20rpx 52rpx;
+}
+
+.pm-open,
+.pm-close {
+  position: absolute;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 140rpx;
+  line-height: 1;
+  color: rgba(240, 201, 135, 0.30);
+  pointer-events: none;
+}
+
+.pm-open {
+  top: -56rpx;
+  left: -6rpx;
+}
+
+.pm-close {
+  right: 0;
+  bottom: -52rpx;
+}
+
+
+
+/* ── 入场动画 v2：从上到下，依次浮现 ── */
+@keyframes riseSlow {
+  from { transform: translateY(26rpx); }
+  to   { transform: translateY(0); }
+}
+
+/* 首次进入：完整版 */
+.intro .head    { animation: riseSlow .90s 0s    both; }
+.intro .poem    { animation: riseSlow .90s .12s  both; }
+.intro .last    { animation: riseSlow .90s .24s  both; }
+.intro .actions { animation: riseSlow .90s .36s  both; }
+
+/* 当天再次进入：快一点，但顺序不变 */
+.intro-fast .head    { animation: riseSlow .30s 0s   both; }
+.intro-fast .poem    { animation: riseSlow .30s .04s both; }
+.intro-fast .last    { animation: riseSlow .30s .08s both; }
+.intro-fast .actions { animation: riseSlow .30s .12s both; }
+
+/* ── 晚睡原因面板 ── */
+.reason-mask {
+  position: fixed; inset: 0;
+  z-index: 60;
+  background: rgba(0,0,0,.42);
+}
+
+.reason-sheet {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 61;
+  padding: 44rpx 40rpx calc(40rpx + env(safe-area-inset-bottom));
+  border-radius: 34rpx 34rpx 0 0;
+  background: #111a30;
+  border-top: 1rpx solid rgba(255,255,255,.1);
+  animation: sheetUp .38s ease both;
+}
+
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.reason-title {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 38rpx;
+  letter-spacing: 3rpx;
+  color: #f6e7c8;
+}
+
+.reason-sub {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #8b9ab8;
+  letter-spacing: 1rpx;
+}
+
+.reason-chips {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 30rpx -8rpx 0;
+}
+
+.reason-chip {
+  margin: 8rpx;
+  padding: 16rpx 26rpx;
+  border-radius: 999rpx;
+  font-size: 25rpx;
+  color: #c9d5ee;
+  background: rgba(255,255,255,.06);
+  border: 1rpx solid rgba(255,255,255,.1);
+}
+
+.reason-input {
+  margin-top: 26rpx;
+  padding: 22rpx 26rpx;
+  border-radius: 20rpx;
+  font-size: 25rpx;
+  color: #eaf0ff;
+  background: rgba(255,255,255,.05);
+  border: 1rpx solid rgba(255,255,255,.1);
+}
+.reason-ph { color: rgba(255,255,255,.26); }
+
+.reason-actions { display: flex; margin-top: 30rpx; }
+.reason-btn {
+  flex: 1;
+  padding: 24rpx 0;
+  border-radius: 999rpx;
+  font-size: 27rpx;
+  text-align: center;
+}
+.reason-btn + .reason-btn { margin-left: 20rpx; }
+.reason-btn.ghost { color: #8b9ab8; border: 1rpx solid rgba(255,255,255,.12); }
+.reason-btn.primary { color: #141a2c; font-weight: 600; background: linear-gradient(135deg, #f7dfae, #e8b96f); }
+
+/* ── 超长睡眠确认 ── */
+.anom-mask { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.45); }
+
+.anom-sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 61;
+  padding: 44rpx 40rpx calc(40rpx + env(safe-area-inset-bottom));
+  border-radius: 34rpx 34rpx 0 0;
+  background: #111a30;
+  border-top: 1rpx solid rgba(255,255,255,.1);
+  animation: sheetUp .38s ease both;
+}
+
+.anom-title { font-family: "Songti SC", "STSong", serif; font-size: 38rpx; letter-spacing: 3rpx; color: #f6e7c8; }
+.anom-sub { margin-top: 14rpx; font-size: 24rpx; line-height: 1.9; color: #8b9ab8; }
+
+.anom-actions { display: flex; margin-top: 30rpx; }
+.anom-btn {
+  flex: 1;
+  padding: 24rpx 20rpx;
+  border-radius: 20rpx;
+  background: rgba(255,255,255,.05);
+  border: 1rpx solid rgba(255,255,255,.1);
+}
+.anom-btn + .anom-btn { margin-left: 20rpx; }
+.anom-btn-t { font-size: 26rpx; color: #eaf0ff; }
+.anom-btn-s { margin-top: 6rpx; font-size: 20rpx; color: #5f6f8f; }
+
+.anom-manual { display: flex; align-items: center; margin-top: 26rpx; }
+.anom-manual-label { font-size: 24rpx; color: #8b9ab8; margin-right: 18rpx; }
+.anom-manual-ok {
+  margin-left: auto;
+  padding: 12rpx 30rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  color: #141a2c;
+  font-weight: 600;
+  background: linear-gradient(135deg, #f7dfae, #e8b96f);
+}

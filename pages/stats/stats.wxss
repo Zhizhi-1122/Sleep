@@ -1,0 +1,343 @@
+.page {
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  padding-left: 34rpx;
+  padding-right: 34rpx;
+  box-sizing: border-box;
+  isolation: isolate;  
+  transition: background .9s ease;
+}
+.page.night { background: linear-gradient(180deg, #080e1c 0%, #141f3c 100%); }
+.page.day   { background: linear-gradient(180deg, #bad8ec 0%, #dfe9f3 46%, #f6f1e8 100%); }
+
+.head-fixed { flex: none; }
+
+.body-scroll { flex: 1; min-height: 0; }
+.body-pad { padding-bottom: 60rpx; }
+
+.top { display: flex; align-items: center; justify-content: space-between; }
+.title { font-size: 54rpx; font-weight: 600; letter-spacing: 4rpx; }
+.page.night .title { color: #f4e6c8; }
+.page.day .title { color: #8a6a2f; }
+
+.settings-btn { font-size: 22rpx; letter-spacing: 2rpx; padding: 10rpx 22rpx; border-radius: 999rpx; }
+.page.night .settings-btn { color: #8b9ab8; border: 1rpx solid rgba(255,255,255,.12); }
+.page.day .settings-btn { color: #5f7191; border: 1rpx solid rgba(34,48,74,.12); }
+
+.month-row { display: flex; align-items: center; justify-content: center; margin-top: 26rpx; margin-bottom: 8rpx; }
+.month-arrow { font-size: 40rpx; padding: 0 30rpx; font-family: Georgia, serif; }
+.month-arrow.dim { opacity: .22; }
+.page.night .month-arrow { color: #8b9ab8; }
+.page.day .month-arrow { color: #5f7191; }
+.month-label { font-size: 26rpx; letter-spacing: 3rpx; }
+.page.night .month-label { color: #c9d5ee; }
+.page.day .month-label { color: #33415e; }
+
+.stats { display: flex; flex-wrap: wrap; margin: 26rpx -8rpx 0; }
+.stat { width: calc(50% - 16rpx); margin: 8rpx; padding: 26rpx 24rpx; border-radius: 22rpx; }
+.page.night .stat { background: rgba(255,255,255,.055); border: 1rpx solid rgba(255,255,255,.08); }
+.page.day .stat { background: rgba(255,255,255,.7); border: 1rpx solid rgba(34,48,74,.08); }
+.stat-v { font-size: 38rpx; font-weight: 600; letter-spacing: 1rpx; }
+.stat-v.small-v { font-size: 27rpx; }
+.page.night .stat-v { color: #f0c987; }
+.page.day .stat-v { color: #b98338; }
+.stat-k { margin-top: 8rpx; font-size: 21rpx; letter-spacing: 1rpx; }
+.page.night .stat-k { color: #5f6f8f; }
+.page.day .stat-k { color: #8c9bb4; }
+
+/* 星图卡片 */
+.star-card {
+  position: relative;
+  margin-top: 30rpx;
+  padding: 30rpx 26rpx 24rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(180deg, #0a1226 0%, #0d1730 100%);
+  border: 1rpx solid rgba(255,255,255,.07);
+  box-shadow: 0 20rpx 60rpx rgba(0,0,0,.28);
+  transition: background .9s ease, border-color .9s ease, box-shadow .9s ease;
+}
+
+/* 白天：一扇被照亮的窗 */
+.star-card.card-day {
+  background: linear-gradient(180deg, #141d36 0%, #17203c 100%);
+  border-color: rgba(255, 214, 160, 0.36);
+  box-shadow:
+    0 0 0 1rpx rgba(255, 255, 255, 0.34),
+    0 12rpx 36rpx rgba(100, 138, 195, 0.26),
+    0 0 64rpx 14rpx rgba(186, 216, 236, 0.62),
+    0 0 140rpx 36rpx rgba(186, 216, 236, 0.30);
+}
+
+/* 白天的窗顶反光 */
+.card-sheen {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 110rpx;
+  border-radius: 28rpx 28rpx 0 0;
+  background: linear-gradient(180deg, rgba(186,216,236,0.13) 0%, rgba(186,216,236,0) 100%);
+  pointer-events: none;
+}
+
+.week-head { display: flex; margin-top: 22rpx; }
+.week-cell {
+  width: 14.2857%;
+  text-align: center;
+  font-size: 19rpx;
+  letter-spacing: 1rpx;
+  color: rgba(255,255,255,.28);
+}
+
+.field { position: relative; margin-top: 8rpx; }
+
+.slot {
+  position: absolute;
+  width: 14.2857%;
+  height: 24%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.star-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40rpx;
+  min-height: 40rpx;
+}
+
+.star-glyph { line-height: 1; }
+
+.star-missing {
+  width: 12rpx; height: 12rpx;
+  border-radius: 50%;
+  border: 1rpx dashed rgba(255,255,255,.22);
+  background: rgba(255,255,255,.02);
+}
+
+.today-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1rpx solid rgba(240,201,135,.5);
+  box-shadow: 0 0 14rpx rgba(240,201,135,.22);
+  pointer-events: none;
+}
+
+.slot-day {
+  margin-top: 4rpx;
+  font-size: 16rpx;
+  color: rgba(255,255,255,.26);
+  letter-spacing: 0;
+}
+
+.bubble {
+  position: absolute;
+  z-index: 8;
+  min-width: 168rpx;
+  padding: 16rpx 20rpx;
+  border-radius: 18rpx;
+  background: rgba(16,24,44,.96);
+  border: 1rpx solid rgba(240,201,135,.24);
+  box-shadow: 0 12rpx 34rpx rgba(0,0,0,.4);
+  pointer-events: none;
+}
+.bubble-row { font-size: 22rpx; color: #c9d5ee; line-height: 1.8; }
+.bubble-dur { margin-top: 4rpx; font-size: 22rpx; color: #f0c987; }
+
+.legend { display: flex; align-items: center; justify-content: flex-end; margin-top: 16rpx; padding: 0 8rpx; }
+.legend-t { font-size: 19rpx; color: rgba(255,255,255,.32); margin: 0 10rpx; }
+.legend-bar {
+  width: 150rpx; height: 8rpx; border-radius: 6rpx;
+  background: linear-gradient(90deg, #fff3d0, #f0c987, #babed8, #a9b8dd, #5a6ea8);
+}
+
+
+
+.insight { margin-top: 30rpx; padding: 0 10rpx; font-size: 24rpx; line-height: 1.9; letter-spacing: 1rpx; }
+.page.night .insight { color: #8b9ab8; }
+.page.day .insight { color: #5f7191; }
+
+.report-entry {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 34rpx; padding: 30rpx; border-radius: 24rpx;
+}
+.page.night .report-entry { background: rgba(255,255,255,.05); border: 1rpx solid rgba(255,255,255,.08); }
+.page.day .report-entry { background: rgba(255,255,255,.7); border: 1rpx solid rgba(34,48,74,.08); }
+.entry-t { font-size: 28rpx; letter-spacing: 2rpx; }
+.page.night .entry-t { color: #eaf0ff; }
+.page.day .entry-t { color: #22304a; }
+.entry-s { margin-top: 8rpx; font-size: 21rpx; color: #8c9bb4; }
+.arrow { font-size: 38rpx; color: #8c9bb4; font-family: Georgia, serif; }
+
+/* 弹层 */
+.mask { position: fixed; inset: 0; z-index: 20; background: rgba(0,0,0,.45); }
+
+.panel, .modal {
+  position: fixed; left: 34rpx; right: 34rpx; bottom: 60rpx; z-index: 21;
+  padding: 36rpx 34rpx; border-radius: 28rpx;
+  background: #111a30; border: 1rpx solid rgba(255,255,255,.1);
+  box-shadow: 0 30rpx 80rpx rgba(0,0,0,.5);
+}
+.panel-title, .modal-title { font-size: 30rpx; letter-spacing: 3rpx; color: #eaf0ff; margin-bottom: 26rpx; }
+
+.panel-row { display: flex; align-items: center; justify-content: space-between; padding: 20rpx 0; border-bottom: 1rpx solid rgba(255,255,255,.06); }
+.panel-label { font-size: 26rpx; color: #c9d5ee; }
+.panel-note { margin-top: 22rpx; font-size: 21rpx; color: #5f6f8f; line-height: 1.7; }
+
+.time-pill {
+  padding: 12rpx 26rpx; border-radius: 999rpx;
+  font-size: 26rpx; color: #f0c987;
+  background: rgba(240,201,135,.1);
+  border: 1rpx solid rgba(240,201,135,.24);
+}
+
+.modal-row { display: flex; align-items: center; justify-content: space-between; padding: 22rpx 0; font-size: 26rpx; color: #c9d5ee; }
+.modal-dur { margin-top: 6rpx; font-size: 23rpx; color: #8b9ab8; }
+
+.modal-actions { display: flex; margin-top: 34rpx; }
+.m-btn { flex: 1; padding: 24rpx 0; border-radius: 999rpx; font-size: 27rpx; text-align: center; }
+.m-btn + .m-btn { margin-left: 20rpx; }
+.m-btn.ghost { color: #c9d5ee; border: 1rpx solid rgba(255,255,255,.14); background: rgba(255,255,255,.04); }
+.m-btn.primary { color: #141a2c; font-weight: 600; background: linear-gradient(135deg, #f7dfae, #e8b96f); }
+
+.modal-del { margin-top: 24rpx; text-align: center; font-size: 23rpx; color: rgba(224,90,90,.9); }
+
+/* ── 星河 ── */
+.galaxy-mask {
+  position: fixed; inset: 0; z-index: 30;
+  background: rgba(0,0,0,.62);
+  touch-action: none;
+}
+
+.galaxy {
+  position: fixed;
+  left: 24rpx; right: 24rpx;
+  top: 12vh; bottom: 12vh;
+  z-index: 31;
+  border-radius: 30rpx;
+  background: radial-gradient(120% 90% at 50% 35%, #101c3a 0%, #070c18 78%);
+  border: 1rpx solid rgba(255,255,255,.08);
+  box-shadow: 0 40rpx 100rpx rgba(0,0,0,.6);
+  overflow: hidden;
+  padding: 26rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  touch-action: none;
+}
+
+.galaxy-head {
+  flex: none;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.galaxy-title { font-size: 24rpx; letter-spacing: 3rpx; color: #8b9ab8; }
+.galaxy-close { font-size: 28rpx; color: rgba(255,255,255,.4); padding: 0 10rpx; }
+
+.galaxy-stage {
+  position: relative;
+  flex: 1;
+  margin: 10rpx 0;
+  overflow: hidden;
+}
+
+.galaxy-canvas {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.galaxy-tip {
+  position: absolute;
+  left: 0; right: 0; top: 45%;
+  text-align: center;
+  font-size: 22rpx;
+  letter-spacing: 2rpx;
+  color: rgba(255,255,255,.3);
+}
+
+.galaxy-foot {
+  flex: none;
+  text-align: center;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: rgba(255,255,255,.3);
+}
+
+/* ── 恢复头部布局（之前被误删） ── */
+.card-head {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6rpx;
+}
+
+.card-title {
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+  color: #8b9ab8;
+}
+
+.galaxy-btn {
+  font-size: 22rpx;
+  letter-spacing: 2rpx;
+  color: rgba(240, 201, 135, 0.75);
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  border: 1rpx solid rgba(240, 201, 135, 0.18);
+}
+
+/* 窗的反光不要盖住文字 */
+.card-sheen { z-index: 1; }
+
+/* 弹窗淡入（动画开始前的那 0.28 秒遮罩住初始化） */
+@keyframes galaxyFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.galaxy {
+  animation: galaxyFadeIn 0.28s ease both;
+}
+
+/* 情境引导 */
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: 34rpx;
+  transform: translateX(-50%);
+  padding: 16rpx 30rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  letter-spacing: 1rpx;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 60;
+  animation: hintLife 4.2s ease forwards;
+}
+.page.night .hint {
+  color: #f0c987;
+  background: rgba(14, 22, 40, 0.92);
+  border: 1rpx solid rgba(240, 201, 135, 0.28);
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.42);
+}
+.page.day .hint {
+  color: #8a6a2f;
+  background: rgba(255, 252, 245, 0.95);
+  border: 1rpx solid rgba(185, 131, 56, 0.26);
+  box-shadow: 0 10rpx 30rpx rgba(60, 80, 110, 0.16);
+}
+
+@keyframes hintLife {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(10rpx); }
+  10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  86%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(6rpx); }
+}

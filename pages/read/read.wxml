@@ -1,0 +1,341 @@
+<page-meta page-style="overflow: hidden"></page-meta>
+<view class="root {{isDay ? 'day' : 'night'}}">
+  <view class="page {{isDay ? 'day' : 'night'}}" style="padding-top: {{navTop + 44}}px" bindtap="onPageTap">
+
+    <view class="tap-fx">
+      <view class="tap-ring {{item.day ? 'day' : ''}}"
+            wx:for="{{tapFx}}" wx:key="id"
+            style="left:{{item.x}}px;top:{{item.y}}px;width:{{item.size}}px;height:{{item.size}}px"></view>
+    </view>
+
+    <view class="head-fixed">
+    <view class="top">
+      <view class="title">枕边</view>
+      <view class="h-sub" wx:if="{{nightCount > 0}}">第 {{nightCount}} 晚</view>
+    </view>
+  </view>
+
+  <scroll-view class="body-scroll" scroll-y enhanced="{{true}}" show-scrollbar="{{false}}">
+
+    <!-- 夜相 -->
+    <view class="sec-head first">
+      <text class="sec-title">夜 相</text>
+    </view>
+
+    <view class="card portrait-card" bindtap="openPortrait">
+      <view class="avatar av-{{avatarKey < 0 ? 0 : avatarKey}} {{p.ready ? '' : 'dim'}}">
+        <view class="g g1"></view>
+        <view class="g g2"></view>
+        <view class="g g3"></view>
+      </view>
+      <view class="p-info">
+        <view class="p-name">{{p.ready ? p.name : '还在认识你'}}</view>
+        <view class="p-desc">{{p.ready ? p.desc : hint}}</view>
+      </view>
+      <view class="chev">›</view>
+    </view>
+
+    <!-- 星语 -->
+    <view class="sec-head">
+      <text class="sec-title">星 语</text>
+      <view class="write-btn" bindtap="openCompose">写一句 +</view>
+    </view>
+
+    <block wx:if="{{nodes.length > 0}}">
+      <scroll-view class="vine-scroll" scroll-x enhanced="{{true}}" show-scrollbar="{{false}}"
+                   scroll-left="{{scrollLeft}}">
+        <view class="vine-track" style="width:{{vineW}}rpx;height:{{trackH}}rpx">
+
+          <view class="vd" wx:for="{{segs}}" wx:key="index"
+                style="left:{{item.x}}rpx;top:{{item.y}}rpx;width:{{item.w}}rpx;transform:rotate({{item.rot}}deg);opacity:{{item.op}}">
+          </view>
+
+          <view class="leaf" wx:for="{{leaves}}" wx:key="index"
+                style="left:{{item.x}}rpx;top:{{item.y}}rpx;width:{{item.w}}rpx;height:{{item.h}}rpx;transform:rotate({{item.rot}}deg);opacity:{{item.op}}">
+            <view class="leaf-i" style="animation-delay:{{item.delay}}s"></view>
+          </view>
+
+          <view class="vn-date" wx:for="{{nodes}}" wx:key="dateKey"
+                style="left:{{item.x}}rpx;top:{{item.y}}rpx">{{item.short}}</view>
+
+          <view class="vn-arm" wx:for="{{nodes}}" wx:key="dateKey"
+                style="{{item.style}}"
+                data-key="{{item.dateKey}}" catchtap="openDay">
+            <view class="vn-sway" style="{{item.swayStyle}}">
+              <view class="vn-seg1" style="height:{{item.h1}}rpx"></view>
+              <view class="vn-knot" style="top:{{item.h1}}rpx"></view>
+              <view class="vn-node2" style="top:{{item.h1}}rpx;transform:rotate({{item.bend}}deg)">
+                <view class="vn-seg2" style="height:{{item.h2}}rpx"></view>
+                <view class="vn-star" style="top:{{item.h2}}rpx;font-size:{{item.size}}rpx;color:{{item.color}};text-shadow:{{item.glow}}">✦</view>
+              </view>
+            </view>
+          </view>
+
+        </view>
+      </scroll-view>
+
+      <view class="vine-foot">
+        <text class="vf-tip">{{nodes.length > 5 ? '← 往回拖，看看更早的夜' : '再写一句，藤蔓就会长一点'}}</text>
+        <text class="vf-more" bindtap="openAll">看全部 ›</text>
+      </view>
+    </block>
+
+    <view class="empty" wx:else>
+      <text class="empty-line">还没有星星。</text>
+      <text class="empty-line">写下第一句，它就亮了。</text>
+      <text class="empty-line small">也可以补写以前的夜晚。</text>
+    </view>
+
+    <!-- 周报 -->
+    <view class="sec-head">
+      <text class="sec-title">周 报</text>
+      <text class="sec-note" wx:if="{{reportTotal > 0}}">共 {{reportTotal}} 封</text>
+    </view>
+
+    <view class="stack" wx:if="{{reportTotal > 0}}" bindtap="openLatest">
+      <view class="env back3" wx:if="{{reportTotal > 2}}"></view>
+      <view class="env back2" wx:if="{{reportTotal > 1}}"></view>
+
+      <view class="env top {{reports[0].read ? 'read' : 'unread'}}">
+        <view class="env-flap"></view>
+        <view class="env-crease"></view>
+        <view class="env-range">{{reports[0].range}}</view>
+        <view class="env-seal">枕</view>
+        <view class="env-dot" wx:if="{{!reports[0].read}}"></view>
+      </view>
+    </view>
+
+    <view class="empty" wx:else>
+      <text class="empty-line">第一封信还在路上。</text>
+      <text class="empty-line">一周记满 4 晚就寄出。</text>
+    </view>
+
+    <view class="more" bindtap="openLetters" wx:if="{{reportTotal > 0}}">
+      过往 · {{reportTotal}} 封 ›
+    </view>
+    <view class="hint" wx:if="{{noteHint}}">在「写一句」里改日期，可以补写以前的夜晚</view>
+    <view class="foot-pad"></view>
+  </scroll-view>
+</view>
+
+<!-- 夜相弹窗 -->
+<view class="mask" wx:if="{{pShow}}" catchtap="closePortrait">
+  <view class="sheet" catchtap="noop">
+    <view class="avatar big av-{{avatarKey < 0 ? 0 : avatarKey}} {{p.ready ? '' : 'dim'}}">
+      <view class="g g1"></view>
+      <view class="g g2"></view>
+      <view class="g g3"></view>
+    </view>
+    <view class="ps-name">{{p.ready ? p.name : '还在认识你'}}</view>
+    <view class="ps-desc">{{p.ready ? p.desc : hint}}</view>
+
+    <view class="ps-stats" wx:if="{{p.ready}}">
+      <view class="ps-stat">
+        <text class="ps-k">平均入睡</text>
+        <text class="ps-v">{{p.avgBedLabel}}</text>
+      </view>
+      <view class="ps-stat">
+        <text class="ps-k">平均时长</text>
+        <text class="ps-v">{{p.avgDurLabel}}</text>
+      </view>
+      <view class="ps-stat">
+        <text class="ps-k">规律度</text>
+        <text class="ps-v">{{p.regPct}}%</text>
+      </view>
+    </view>
+
+    <view class="ps-list">
+      <view class="ps-item {{index === avatarKey ? 'on' : ''}}" wx:for="{{types}}" wx:key="key">
+        <text class="ps-item-name">{{item.name}}</text>
+        <text class="ps-item-desc">{{item.desc}}</text>
+      </view>
+    </view>
+
+    <view class="ps-note" wx:if="{{p.ready}}">
+      由最近 {{p.total}} 晚的入睡时间与时长做 KMeans 聚类（k={{p.k}}）得出。记录越多，它越准。
+    </view>
+    <view class="ps-guide" bindtap="openGuide">使用说明 ›</view>
+    <view class="ps-close" bindtap="closePortrait">收起</view>
+  </view>
+</view>
+
+<!-- 写一句 / 补写 / 修改 -->
+<view class="mask bottom" wx:if="{{composeShow}}" catchtap="closeCompose">
+  <view class="composer" catchtap="noop">
+
+    <view class="cp-head">{{editId ? '修改这一句' : '写给今晚'}}</view>
+
+    <picker mode="date" value="{{dateKey}}" end="{{todayStr}}" bindchange="onPickDate">
+      <view class="cp-date">
+        <text class="cp-date-k">日期</text>
+        <text class="cp-date-v">{{dateText}}</text>
+        <text class="cp-date-a">›</text>
+      </view>
+    </picker>
+
+    <textarea class="cp-input" value="{{draft}}" bindinput="onDraft"
+              maxlength="-1" auto-height
+              placeholder="今天想留下点什么？想写多少都可以。"
+              placeholder-class="cp-ph"></textarea>
+
+    <view class="cp-moods">
+      <view class="mood {{mood === item.k ? 'on' : ''}}" wx:for="{{moods}}" wx:key="k"
+            data-k="{{item.k}}" bindtap="pickMood">
+        <view class="mood-dot" style="background:{{item.c}}"></view>
+        <text class="mood-name">{{item.name}}</text>
+      </view>
+    </view>
+
+    <view class="cp-actions">
+      <view class="btn ghost" bindtap="closeCompose">再想想</view>
+      <view class="btn gold {{draft ? '' : 'off'}}" bindtap="saveNote">{{editId ? '保存' : '点亮'}}</view>
+    </view>
+  </view>
+</view>
+
+<!-- 某天的句子 -->
+<view class="mask" wx:if="{{dayShow}}" catchtap="closeDay">
+  <view class="paper small" catchtap="noop">
+    <view class="paper-date">{{dayTitle}}</view>
+    <view class="paper-hint">长按某一句，可以修改或删除</view>
+    <scroll-view scroll-y class="paper-scroll">
+      <view class="day-item" wx:for="{{dayItems}}" wx:key="id"
+            data-id="{{item.id}}" bindlongpress="longNote">
+        <view class="day-mood" wx:if="{{item.moodColor}}" style="background:{{item.moodColor}}"></view>
+        <text class="day-text">{{item.text}}</text>
+        <text class="day-time" wx:if="{{item.time}}">{{item.time}}</text>
+      </view>
+    </scroll-view>
+    <view class="paper-close" bindtap="closeDay">收起</view>
+  </view>
+</view>
+
+<!-- 看全部 -->
+<view class="full" wx:if="{{allShow}}">
+  <view class="full-head" style="padding-top: {{navTop + 44}}px">
+    <view class="fh-back" bindtap="closeAll">‹</view>
+    <view class="fh-title">所有星语</view>
+    <view class="fh-sub">{{noteDays}} 天</view>
+  </view>
+  <scroll-view scroll-y class="full-body" enhanced="{{true}}" show-scrollbar="{{false}}">
+    <view class="tl-track" style="height:{{tlH}}rpx">
+
+      <view class="vd {{item.thin ? 'vd-thin' : ''}}" wx:for="{{tlSegs}}" wx:key="index"
+            style="left:{{item.x}}rpx;top:{{item.y}}rpx;width:{{item.w}}rpx;transform:rotate({{item.rot}}deg);opacity:{{item.op}}">
+      </view>
+
+      <view class="twig" wx:for="{{tlTwigs}}" wx:key="index"
+            style="left:{{item.x}}rpx;top:{{item.y}}rpx;height:{{item.len}}rpx;transform:rotate({{item.rot}}deg)">
+      </view>
+
+      <view class="leaf" wx:for="{{tlLeaves}}" wx:key="index"
+            style="left:{{item.x}}rpx;top:{{item.y}}rpx;width:{{item.w}}rpx;height:{{item.h}}rpx;transform:rotate({{item.rot}}deg);opacity:{{item.op}}">
+        <view class="leaf-i" style="animation-delay:{{item.delay}}s"></view>
+      </view>
+
+      <view class="tl-date" wx:for="{{tlDates}}" wx:key="dateKey"
+            style="left:{{item.x}}rpx;top:{{item.y}}rpx">{{item.short}}</view>
+
+      <view class="vn-arm" wx:for="{{tlArms}}" wx:key="dateKey"
+            style="{{item.style}}"
+            data-key="{{item.dateKey}}" catchtap="openDay">
+        <view class="vn-sway" style="{{item.swayStyle}}">
+          <view class="vn-seg1" style="height:{{item.h1}}rpx"></view>
+          <view class="vn-knot" style="top:{{item.h1}}rpx"></view>
+          <view class="vn-node2" style="top:{{item.h1}}rpx;transform:rotate({{item.bend}}deg)">
+            <view class="vn-seg2" style="height:{{item.h2}}rpx"></view>
+            <view class="vn-star" style="top:{{item.h2}}rpx;font-size:{{item.size}}rpx;color:{{item.color}};text-shadow:{{item.glow}}">✦</view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+    <view class="foot-pad"></view>
+  </scroll-view>
+</view>
+
+<!-- 过往的信 -->
+<view class="full" wx:if="{{lettersShow}}">
+  <view class="full-head" style="padding-top: {{navTop + 44}}px">
+    <view class="fh-back" bindtap="closeLetters">‹</view>
+    <view class="fh-title">过往的信</view>
+    <view class="fh-sub">{{reportTotal}} 封</view>
+  </view>
+  <scroll-view scroll-y class="full-body" enhanced="{{true}}" show-scrollbar="{{false}}">
+    <view class="lr {{item.read ? 'read' : 'unread'}}" wx:for="{{reports}}" wx:key="id"
+          data-id="{{item.id}}" catchtap="openLetter">
+      <view class="lr-env"><view class="lr-flap"></view></view>
+      <view class="lr-info">
+        <view class="lr-range">{{item.range}}</view>
+        <view class="lr-prev">{{item.paras[0]}}</view>
+      </view>
+      <view class="lr-dot" wx:if="{{!item.read}}"></view>
+    </view>
+    <view class="foot-pad"></view>
+  </scroll-view>
+</view>
+
+<!-- 读信 -->
+<view class="letter-stage" wx:if="{{letterShow}}">
+  <view class="ls-mask" catchtap="closeLetter"></view>
+
+  <view class="ls-env {{letterStage >= 2 ? 'open' : ''}} {{letterStage >= 3 ? 'gone' : ''}}">
+    <view class="ls-flap"></view>
+    <view class="ls-seal">枕</view>
+  </view>
+
+  <view class="paper letter {{letterStage >= 3 ? 'in' : ''}}">
+    <scroll-view scroll-y class="letter-scroll" enhanced="{{true}}" show-scrollbar="{{false}}">
+      <view class="lt-frame"></view>
+
+      <view class="lt-moon">
+        <view class="lt-moon-b"></view>
+        <view class="lt-moon-s" style="{{moonStyle}}"></view>
+      </view>
+
+      <view class="lt-week">{{letter.title}}</view>
+      <view class="lt-range">{{letter.range}}</view>
+      <view class="lt-rule">
+        <view class="lt-rule-l"></view>
+        <text class="lt-rule-s">✦</text>
+        <view class="lt-rule-l"></view>
+      </view>
+
+      <view class="lt-line" wx:for="{{letter.rows}}" wx:key="k">
+        <text class="lt-k">{{item.k}}</text>
+        <view class="lt-lead"></view>
+        <text class="lt-v">{{item.v}}</text>
+      </view>
+
+      <view class="lt-para" wx:for="{{letter.paras}}" wx:key="*this">{{item}}</view>
+
+      <view class="lt-advice">
+        <text class="lt-star">✦</text>{{letter.advice}}
+      </view>
+
+      <view class="lt-sign">—— 枕 边</view>
+      <view class="lt-wax"><text>枕</text></view>
+    </scroll-view>
+  </view>
+
+  <view class="letter-bar" wx:if="{{letterStage >= 3}}">
+    <view class="lb {{letter.prevId ? '' : 'off'}}" bindtap="prevLetter">‹ 上一封</view>
+    <view class="lb" bindtap="closeLetter">关闭</view>
+    <view class="lb {{letter.nextId ? '' : 'off'}}" bindtap="nextLetter">下一封 ›</view>
+  </view>
+</view>
+
+<!-- 使用说明 -->
+<view class="mask" wx:if="{{guideShow}}" catchtap="closeGuide">
+  <view class="guide" catchtap="noop">
+    <view class="guide-title">使用说明</view>
+    <scroll-view scroll-y class="guide-scroll">
+      <view class="guide-sec" wx:for="{{guide}}" wx:key="page">
+        <view class="guide-page">{{item.page}}</view>
+        <view class="guide-row" wx:for="{{item.rows}}" wx:for-item="r" wx:key="*this">{{r}}</view>
+      </view>
+    </scroll-view>
+    <view class="guide-close" bindtap="closeGuide">知道了</view>
+  </view>
+</view>
+</view>

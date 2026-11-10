@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/stats/stats",
+    "pages/read/read"
+  ],
+
+  "lazyCodeLoading": "requiredComponents",
+  
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#080e1c",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "backgroundColor": "#080e1c",
+    "borderStyle": "black",
+    "color": "#8b9ab8",
+    "selectedColor": "#f0c987",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "望月",
+        "iconPath": "images/tab/moon.png",
+        "selectedIconPath": "images/tab/moon-on.png"
+      },
+      {
+        "pagePath": "pages/stats/stats",
+        "text": "星图",
+        "iconPath": "images/tab/chart.png",
+        "selectedIconPath": "images/tab/chart-on.png"
+      },
+      {
+        "pagePath": "pages/read/read",
+        "text": "枕边",
+        "iconPath": "images/tab/bed.png",
+        "selectedIconPath": "images/tab/bed-on.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

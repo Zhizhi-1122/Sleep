@@ -113,6 +113,12 @@ Page({
       intro: isFirstToday,
       weather: savedWeather || 'clear'
     })
+        try {
+      wx.showShareMenu({
+        withShareTicket: false,
+        menus: ['shareAppMessage', 'shareTimeline']
+      })
+    } catch (e) {}
   },
 
   onReady() {
@@ -947,5 +953,22 @@ Page({
     this.refresh()
   },
 
-  goStats() { wx.switchTab({ url: '/pages/stats/stats' }) }
+   goStats() { wx.switchTab({ url: '/pages/stats/stats' }) },
+
+  onShareAppMessage() {
+    return {
+      title: this.data.isDay
+        ? '枕星月眠 · 今天，也慢慢来。'
+        : '枕星月眠 · 今晚，允许自己早点睡。',
+      path: '/pages/index/index'
+    }
+  },
+
+  onShareTimeline() {
+    return {
+      title: this.data.isDay
+        ? '枕星月眠 · 今天，也慢慢来。'
+        : '枕星月眠 · 今晚，允许自己早点睡。'
+    }
+  }
 })

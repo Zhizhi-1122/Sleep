@@ -431,7 +431,14 @@ Page({
       todayStr: notesApi.todayKey(),
       vineW: MIN_W
     })
+    try {
+      wx.showShareMenu({
+        withShareTicket: false,
+        menus: ['shareAppMessage', 'shareTimeline']
+      })
+    } catch (e) {}
   },
+  
 
   onShow() {
     safe(function () { reportApi.ensure() }, false)
@@ -851,6 +858,18 @@ Page({
     tapfx.fire(this, e, this.data.isDay)
   },
   
+  onShareAppMessage() {
+    return {
+      title: '枕星月眠 · 想说的话，挂成藤蔓上的星星。',
+      path: '/pages/index/index'
+    }
+  },
+
+  onShareTimeline() {
+    return {
+      title: '枕星月眠 · 想说的话，挂成藤蔓上的星星。'
+    }
+  },
 
   hideBar() {
     try { wx.hideTabBar({ animation: false }) } catch (e) {}

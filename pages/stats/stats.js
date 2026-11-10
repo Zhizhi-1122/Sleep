@@ -214,6 +214,13 @@ Page({
       month: now.getMonth()
     })
     this._longPressed = false
+
+    try {
+      wx.showShareMenu({
+        withShareTicket: false,
+        menus: ['shareAppMessage', 'shareTimeline']
+      })
+    } catch (e) {}
   },
 
   onShow() { this.build(); this.maybeHint() },
@@ -231,6 +238,19 @@ Page({
   noop() {},
   onPageTap(e) {
     tapfx.fire(this, e, this.data.isDay)
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '枕星月眠 · 把每一个夜晚，连成一条星河。',
+      path: '/pages/index/index'
+    }
+  },
+
+  onShareTimeline() {
+    return {
+      title: '枕星月眠 · 把每一个夜晚，连成一条星河。'
+    }
   },
 
   applyTabBar(isDay) {
